@@ -12,9 +12,10 @@ const config = {
 let player, cursors, coins;
 
 function preload() {
-    this.load.image('player', 'https://i.imgur.com/9f3QXwY.png');
-    this.load.image('ground', 'https://i.imgur.com/PpQ0s7C.png');
-    this.load.image('coin', 'https://i.imgur.com/NQ7QFdr.png');
+    // <-- сюда вставь свои PNG!!!
+    this.load.image('player', 'player.png'); 
+    this.load.image('ground', '');
+    this.load.image('coin', 'coin.png'); 
 }
 
 function create() {
@@ -22,17 +23,23 @@ function create() {
     const ground = this.physics.add.staticGroup();
     ground.create(400, 380, 'ground').setScale(4, 1).refreshBody();
 
-    // игрок
-    player = this.physics.add.sprite(100, 300, 'player').setScale(1.2);
+    // игрок (уменьшенный)
+    player = this.physics.add.sprite(100, 300, 'player');
+    player.setScale(0.25);   // <-- размер меняется здесь
     player.setCollideWorldBounds(true);
 
     this.physics.add.collider(player, ground);
 
-    // монетки
+    // монетки (банки пива)
     coins = this.physics.add.group({
         key: 'coin',
         repeat: 5,
         setXY: { x: 150, y: 200, stepX: 120 }
+    });
+
+    coins.children.iterate(coin => {
+        coin.setScale(0.15); // <-- уменьшение банок
+        coin.setBounce(0.3);
     });
 
     this.physics.add.overlap(player, coins, (player, coin) => {
